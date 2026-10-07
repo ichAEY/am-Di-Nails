@@ -75,6 +75,36 @@ def check(browser, width, height, mobile, language):
     if language in ("ru", "en"):
         must_equal(address_sub, expected_map_copy, "map provider action")
 
+    if mobile and width < 1024:
+        nav = page.locator("body > .tn23-section-nav.salon-template-fixed-nav")
+        page.evaluate("""() => {
+            const target = document.getElementById('tn13Services');
+            window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY + 80);
+        }""")
+        page.wait_for_function("document.querySelector('body > .tn23-section-nav')?.classList.contains('visible')", timeout=5000)
+        def nav_metrics():
+            return nav.evaluate("""element => {
+                const rect=element.getBoundingClientRect(),style=getComputedStyle(element);
+                return {top:rect.top,transform:style.transform,overflowY:style.overflowY,
+                        scrollLeft:element.scrollLeft,scrollWidth:element.scrollWidth,
+                        clientWidth:element.clientWidth};
+            }""")
+        before = nav_metrics()
+        assert abs(before["top"]) < 1.5, f"Floating menu must remain fixed at top: {before}"
+        assert before["transform"] == "none", f"Floating menu must never translate vertically: {before}"
+        assert before["overflowY"] == "hidden", f"Floating menu must only scroll horizontally: {before}"
+        nav.evaluate("element => { element.scrollLeft = Math.min(100, element.scrollWidth-element.clientWidth); }")
+        page.wait_for_timeout(150)
+        horizontal = nav_metrics()
+        assert abs(horizontal["top"]-before["top"]) < 1, "Horizontal tab navigation moved menu vertically"
+        page.evaluate("""() => {
+            const target = document.getElementById('tn13Team');
+            window.scrollTo(0, target.getBoundingClientRect().top + window.scrollY + 80);
+        }""")
+        page.wait_for_timeout(160)
+        after = nav_metrics()
+        assert abs(after["top"]-before["top"]) < 1, f"Menu changed vertical position on section scroll: {before}, {after}"
+
     sample = page.locator("#stdHeaderBookBtn" if desktop else ".tn22-cta")
     sample.click(timeout=9000)
     links = page.locator("#stdBookOverlay .std-book-options a" if desktop

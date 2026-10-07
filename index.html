@@ -29,7 +29,17 @@ html[data-br-device="desktop"] #brBootIntro.has-client-logo img{width:min(90vw,4
 #brBootIntro.is-exiting{opacity:0;pointer-events:none}
 html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidden!important}
 /* Di Nails mobile logo only: 5% larger and 0.3 cm farther from the left edge. */
-@media(max-width:1023px){html[data-br-device="mobile"] body #salon-mobile #tn13Top .tn22-brand.br-logo-brand img[src="logo.webp"]{height:67.2px!important;max-width:246.75px!important;transform:translateX(-25.66px)!important}}
+@media(max-width:1023px){
+  html[data-br-device="mobile"] body #salon-mobile #tn13Top .tn22-brand.br-logo-brand img[src="logo.webp"]{height:67.2px!important;max-width:246.75px!important;transform:translateX(-25.66px)!important}
+  /* Fixed-height mobile section menu: no vertical translation, only horizontal tab scrolling. */
+  html[data-br-device="mobile"] body > .tn23-section-nav.salon-template-fixed-nav{
+    position:fixed!important;top:0!important;transform:none!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    overscroll-behavior-x:contain!important;overscroll-behavior-y:none!important;
+    touch-action:pan-x!important;-webkit-overflow-scrolling:touch;
+    transition:opacity .18s ease!important;will-change:auto!important;
+  }
+}
 #brLoadError{display:none;min-height:100svh;padding:32px;place-items:center;text-align:center}
 #brLoadError.is-visible{display:grid}
 #brLoadError a{display:inline-block;margin-top:22px;color:#181818}
