@@ -86,6 +86,7 @@ jobs:
 
           shopt -s nullglob
           for file in hero.webp profile.webp gallery-*.webp team-*.webp logo.webp logo.png logo.svg; do
+            test -f "$file" || continue
             cp "$file" _site/
           done
 
