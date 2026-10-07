@@ -1,0 +1,125 @@
+name: Di Nails — Selectel
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: di-nails-selectel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Publish Di Nails to Selectel
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Validate production data
+        run: |
+          set -euo pipefail
+          node tests/validate-site-data.cjs --production
+          test -s index.html
+          test -s desktop.css
+          test -s desktop.js
+          test -s mobile.css
+          test -s mobile-overrides.css
+          test -s mobile.js
+          test -s salon-palette.css
+          test -s site-data.js
+          test -s site-regions.js
+          test -s site-runtime.js
+          test -s hero.webp
+          test -s profile.webp
+
+      - name: Build safe production package
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf _site
+          mkdir -p _site
+          core_files=(
+            index.html
+            desktop.css
+            desktop.js
+            mobile.css
+            mobile-overrides.css
+            mobile.js
+            salon-palette.css
+            site-data.js
+            site-regions.js
+            site-runtime.js
+            favicon-source.png
+            logo-placeholder.svg
+            media-placeholder.svg
+          )
+          for file in "${core_files[@]}"; do
+            test -f "$file"
+            cp "$file" _site/
+          done
+          shopt -s nullglob
+          for file in hero.webp profile.webp gallery-*.webp team-*.webp; do
+            cp "$file" _site/
+          done
+          for file in logo.webp logo.png logo.svg; do
+            if [ -f "$file" ]; then cp "$file" _site/; fi
+          done
+
+      - name: Configure SSH and verify server identity
+        env:
+          DEPLOY_KEY: ${{ secrets.TANEM_SELECTEL_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$DEPLOY_KEY" || { echo "::error::Add TANEM_SELECTEL_SSH_KEY as a repository secret"; exit 1; }
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/tanem_deploy
+          chmod 600 ~/.ssh/tanem_deploy
+          ssh-keyscan -T 10 -t ed25519 135.106.229.21 > ~/.ssh/known_hosts 2>/dev/null
+          ssh-keygen -lf ~/.ssh/known_hosts -E sha256 |
+            grep -F 'SHA256:MWw6jvFkfSnqQn9npxFFbGjp20D9HPrU+luB+Owt4u4' >/dev/null || {
+              echo "::error::Server SSH fingerprint does not match; stopping."
+              exit 1
+            }
+          ssh -i ~/.ssh/tanem_deploy -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            tanem-deploy@135.106.229.21 \
+            'test -w /var/www/di-nails && command -v rsync >/dev/null'
+
+      - name: Upload Di Nails
+        run: |
+          set -euo pipefail
+          rsync -az --delete \
+            -e "ssh -i $HOME/.ssh/tanem_deploy -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            _site/ tanem-deploy@135.106.229.21:/var/www/di-nails/
+
+      - name: Verify Selectel origin and public HTTPS
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/tanem_deploy -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes \
+            tanem-deploy@135.106.229.21 \
+            'test -s /var/www/di-nails/index.html && test -s /var/www/di-nails/site-data.js'
+
+          curl --fail --silent --show-error --max-time 20 \
+            --resolve di-nails.tanem.ru:443:135.106.229.21 \
+            https://di-nails.tanem.ru/site-data.js -o /tmp/di-nails-origin.js
+          grep -Fq 'Di Nails' /tmp/di-nails-origin.js
+
+          redirect_url="$(curl --silent --show-error --max-time 20 \
+            -o /dev/null -w '%{redirect_url}' \
+            http://di-nails.tanem.ru/)"
+          case "$redirect_url" in
+            https://di-nails.tanem.ru/*) ;;
+            *) echo "::error::HTTP is not redirecting to HTTPS: $redirect_url"; exit 1 ;;
+          esac
+
+          curl --fail --silent --show-error --location --max-time 20 \
+            https://di-nails.tanem.ru/site-data.js -o /tmp/di-nails-public.js
+          grep -Fq 'Di Nails' /tmp/di-nails-public.js
