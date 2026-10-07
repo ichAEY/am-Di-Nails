@@ -53,11 +53,25 @@ const data={
   },
   "schedule": {
     "timezone": "Asia/Yerevan",
-    "periods": [],
+    "periods": [
+      {
+        "days": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "open": "09:00",
+        "close": "21:00"
+      }
+    ],
     "fallback": {
-      "ru": "График уточняйте по телефону",
-      "en": "Please call to confirm opening hours",
-      "hy": "Աշխատանքային ժամերը ճշտեք հեռախոսով"
+      "ru": "Ежедневно 09:00–21:00",
+      "en": "Daily 09:00–21:00",
+      "hy": "Ամեն օր 09:00–21:00"
     }
   },
   "contacts": {
@@ -89,9 +103,9 @@ const data={
       {
         "src": "hero.webp",
         "alt": {
-          "ru": "Фирменная стена Di Nails",
-          "en": "Di Nails brand wall",
-          "hy": "Di Nails-ի բրենդային պատ"
+          "ru": "Педикюр Di Nails",
+          "en": "Di Nails pedicure",
+          "hy": "Di Nails ոտնահարդարում"
         }
       }
     ],
@@ -155,6 +169,24 @@ const data={
       }
     ],
     "gallery": {
+      "Салон": [
+        {
+          "src": "gallery-02.webp",
+          "alt": {
+            "ru": "Атмосфера студии Di Nails",
+            "en": "Di Nails studio atmosphere",
+            "hy": "Di Nails ստուդիայի մթնոլորտ"
+          }
+        },
+        {
+          "src": "gallery-06.webp",
+          "alt": {
+            "ru": "Атмосфера и гостеприимство студии",
+            "en": "Salon ambience and hospitality",
+            "hy": "Ստուդիայի հյուրընկալ մթնոլորտ"
+          }
+        }
+      ],
       "Маникюр": [
         {
           "src": "gallery-01.webp",
@@ -262,24 +294,6 @@ const data={
             "ru": "Оформление бровей",
             "en": "Eyebrow styling",
             "hy": "Հոնքերի ձևավորում"
-          }
-        }
-      ],
-      "Салон": [
-        {
-          "src": "gallery-02.webp",
-          "alt": {
-            "ru": "Атмосфера студии Di Nails",
-            "en": "Di Nails studio atmosphere",
-            "hy": "Di Nails ստուդիայի մթնոլորտ"
-          }
-        },
-        {
-          "src": "gallery-06.webp",
-          "alt": {
-            "ru": "Атмосфера и гостеприимство студии",
-            "en": "Salon ambience and hospitality",
-            "hy": "Ստուդիայի հյուրընկալ մթնոլորտ"
           }
         }
       ]

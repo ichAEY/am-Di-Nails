@@ -28,6 +28,8 @@ html[data-br-device="desktop"] #brBootIntro.has-client-logo img{width:min(90vw,4
 #brBootIntro .br-intro-name.is-desktop{font:500 clamp(50.96px,12.74vw,116.48px)/.84 "Cormorant Garamond",Georgia,serif;letter-spacing:.105em;padding:24px 24px 24px calc(24px + .105em)}
 #brBootIntro.is-exiting{opacity:0;pointer-events:none}
 html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidden!important}
+/* Di Nails mobile header logo: shift 0.5 cm left without changing template CSS. */
+@media(max-width:1023px){html[data-br-device="mobile"] body #salon-mobile #tn13Top .tn22-brand.br-logo-brand img{transform:translateX(-37px)!important}}
 #brLoadError{display:none;min-height:100svh;padding:32px;place-items:center;text-align:center}
 #brLoadError.is-visible{display:grid}
 #brLoadError a{display:inline-block;margin-top:22px;color:#181818}
@@ -35,7 +37,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
 </style>
 <link rel="stylesheet" href="desktop.css?v=salon-20261003-v2" media="(hover:hover) and (pointer:fine), (min-width:1024px)">
 <link rel="stylesheet" href="salon-palette.css?v=salon-20261003-v2" media="(hover:hover) and (pointer:fine), (min-width:1024px)">
-<script src="site-data.js?v=salon-20261003-v1"></script>
+<script src="site-data.js?v=di-nails-20261008-gallery"></script>
 <script src="site-regions.js?v=salon-final-20260928-v2"></script>
 <script>
 (()=>{
@@ -109,7 +111,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
    }else ready();
  }
  const script=document.createElement('script');
- script.src=desktop?'desktop.js?v=salon-20261003-v1':'mobile.js?v=salon-20261003-v2';
+ script.src=desktop?'desktop.js?v=di-nails-20261008-gallery':'mobile.js?v=di-nails-20261008-gallery';
  script.async=false;script.onload=()=>{
    const runtime=document.createElement('script');
    runtime.src='site-runtime.js?v=salon-20261003-v5';

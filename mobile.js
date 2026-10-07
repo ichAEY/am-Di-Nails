@@ -114,7 +114,7 @@ const heroMedia=hero.querySelector('.tn22-media');let heroStartX=0,heroMoved=fal
 heroMedia.querySelectorAll('img').forEach(img=>img.draggable=false);
 heroMedia.addEventListener('pointerdown',e=>{heroStartX=e.clientX;heroMoved=false;heroPointer=e.pointerId;try{heroMedia.setPointerCapture(e.pointerId)}catch(_){}});
 heroMedia.addEventListener('pointermove',e=>{if(heroPointer!==null&&Math.abs(e.clientX-heroStartX)>12)heroMoved=true});
-const finishHeroGesture=e=>{if(heroPointer===null)return;const dx=e.clientX-heroStartX;try{heroMedia.releasePointerCapture(heroPointer)}catch(_){}heroPointer=null;if(Math.abs(dx)>42){setHeroSlide(slide+(dx<0?1:-1));return}if(!heroMoved)openGallery('Салон',heroMedia)};
+const finishHeroGesture=e=>{if(heroPointer===null)return;const dx=e.clientX-heroStartX;try{heroMedia.releasePointerCapture(heroPointer)}catch(_){}heroPointer=null;if(Math.abs(dx)>42){setHeroSlide(slide+(dx<0?1:-1));return}if(!heroMoved)openGallery(defaultGalleryCategory,heroMedia)};
 heroMedia.addEventListener('pointerup',finishHeroGesture);heroMedia.addEventListener('pointercancel',()=>{heroPointer=null;heroMoved=false});
 
 // VIEWER
@@ -128,20 +128,42 @@ function resetViewerTransform(){viewerScale=1;viewerX=0;viewerY=0;pinchStart=0;p
 function paintViewer(){const it=viewerItems[viewerIndex];if(!it)return;vImg.src=it.src;vImg.alt=it.alt||'';vCount.textContent=`${String(viewerIndex+1).padStart(2,'0')} из ${String(viewerItems.length).padStart(2,'0')}`;resetViewerTransform();vPrev.hidden=viewerItems.length<2;vNext.hidden=viewerItems.length<2;}
 function openViewer(items,index=0,source='gallery'){viewerItems=Array.isArray(items)?items:[];if(!viewerItems.length)return;viewer.dataset.source=source;const galleryButton=viewer.querySelector('.tn22-view-gallery');if(galleryButton)galleryButton.hidden=source!=='portfolio';viewerIndex=Math.max(0,Math.min(index,viewerItems.length-1));paintViewer();viewer.classList.add('open');document.body.style.overflow='hidden'}
 function closeViewer(){viewer.classList.remove('open');resetViewerTransform();if(!$('#tn13Gallery').classList.contains('open')&&!masterPage.classList.contains('open'))document.body.style.overflow=''}
-vPrev.onclick=()=>{viewerIndex=(viewerIndex-1+viewerItems.length)%viewerItems.length;paintViewer()};vNext.onclick=()=>{viewerIndex=(viewerIndex+1)%viewerItems.length;paintViewer()};viewer.querySelector('.tn22-view-close').onclick=closeViewer;viewer.querySelector('.tn22-view-gallery').onclick=e=>{const origin=e.currentTarget.getBoundingClientRect();closeViewer();openGallery('Салон',origin)};viewer.addEventListener('click',e=>{if(e.target===viewer)closeViewer()});
+vPrev.onclick=()=>{viewerIndex=(viewerIndex-1+viewerItems.length)%viewerItems.length;paintViewer()};vNext.onclick=()=>{viewerIndex=(viewerIndex+1)%viewerItems.length;paintViewer()};viewer.querySelector('.tn22-view-close').onclick=closeViewer;viewer.querySelector('.tn22-view-gallery').onclick=e=>{const origin=e.currentTarget.getBoundingClientRect();closeViewer();openGallery(defaultGalleryCategory,origin)};viewer.addEventListener('click',e=>{if(e.target===viewer)closeViewer()});
 vCanvas.addEventListener('touchstart',e=>{if(e.touches.length===2){e.preventDefault();gestureHadPinch=true;pinchStart=pinchDist(e);pinchBaseScale=viewerScale}else if(e.touches.length===1){sx=e.touches[0].clientX;sy=e.touches[0].clientY;panStartX=viewerX;panStartY=viewerY}},{passive:false});
 vCanvas.addEventListener('touchmove',e=>{if(e.touches.length===2&&pinchStart){e.preventDefault();viewerScale=Math.max(1,Math.min(4,pinchBaseScale*(pinchDist(e)/pinchStart)));if(viewerScale<=1.01){viewerScale=1;viewerX=0;viewerY=0}applyViewerTransform()}else if(e.touches.length===1&&viewerScale>1){e.preventDefault();viewerX=panStartX+(e.touches[0].clientX-sx);viewerY=panStartY+(e.touches[0].clientY-sy);applyViewerTransform()}},{passive:false});
 vCanvas.addEventListener('touchend',e=>{if(e.touches.length<2)pinchStart=0;if(e.touches.length===0){if(!gestureHadPinch&&viewerScale===1&&viewerItems.length>1&&e.changedTouches.length){const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.15)(dx<0?vNext:vPrev).click()}gestureHadPinch=false;if(viewerScale<=1.01)resetViewerTransform()}},{passive:false});
 
 // GALLERY
-const gallery=$('#tn13Gallery');let galleryCat='Салон';
+const gallery=$('#tn13Gallery');
+const galleryCategories=Object.keys(GALLERY);
+const defaultGalleryCategory=galleryCategories.find(c=>c!=='Салон'&&GALLERY[c].length)||galleryCategories[0]||'Салон';
+let galleryCat=defaultGalleryCategory;
 function renderGallery(){
  const items=GALLERY[galleryCat]||[];
- const categories=Object.keys(GALLERY);
- gallery.innerHTML=`<div class="tn22-gallery"><div class="tn22-gallery-top"><button class="tn22-gallery-back" type="button">←</button><div class="tn22-gallery-title"><strong>${["en","hy"].includes(document.body.dataset.brLang)?"Gallery":"Галерея"}</strong><span>SALON NAME</span></div><div></div></div><div class="tn22-gallery-tabs-wrap"><div class="tn22-gallery-tabs">${categories.map(c=>`<button class="tn22-gallery-tab${c===galleryCat?' active':''}" type="button" data-gcat="${c}">${c}</button>`).join('')}</div></div><div class="tn22-gallery-grid${galleryCat==='Салон'?' salon':''}">${items.length?items.map((x,i)=>`<button class="tn22-gallery-tile" type="button" data-gi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join(''):'<div class="tn23-gallery-empty">Фотографии пока не добавлены</div>'}</div></div>`;
- gallery.querySelector('.tn22-gallery-back').onclick=closeGallery;
- gallery.querySelectorAll('[data-gcat]').forEach(b=>b.onclick=()=>{galleryCat=b.dataset.gcat;renderGallery()});
- gallery.querySelectorAll('[data-gi]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();openViewer(items,+b.dataset.gi,'gallery')});
+ if(!gallery.querySelector('.tn22-gallery')){
+  gallery.innerHTML=`<div class="tn22-gallery"><div class="tn22-gallery-top"><button class="tn22-gallery-back" type="button">←</button><div class="tn22-gallery-title"><strong>${["en","hy"].includes(document.body.dataset.brLang)?"Gallery":"Галерея"}</strong><span>SALON NAME</span></div><div></div></div><div class="tn22-gallery-tabs-wrap"><div class="tn22-gallery-tabs">${galleryCategories.map(c=>`<button class="tn22-gallery-tab" type="button" data-gcat="${c}">${c}</button>`).join('')}</div></div><div class="tn22-gallery-grid"></div></div>`;
+  gallery.querySelector('.tn22-gallery-back').onclick=closeGallery;
+  gallery.querySelector('.tn22-gallery-tabs').onclick=e=>{
+   const button=e.target.closest('[data-gcat]');
+   if(!button||button.dataset.gcat===galleryCat)return;
+   galleryCat=button.dataset.gcat;
+   renderGallery();
+  };
+  gallery.querySelector('.tn22-gallery-grid').onclick=e=>{
+   const button=e.target.closest('[data-gi]');
+   if(!button)return;
+   e.preventDefault();e.stopPropagation();
+   openViewer(GALLERY[galleryCat]||[],Number(button.dataset.gi)||0,'gallery');
+  };
+ }
+ gallery.querySelectorAll('[data-gcat]').forEach(button=>{
+  const active=button.dataset.gcat===galleryCat;
+  button.classList.toggle('active',active);
+  button.setAttribute('aria-selected',active?'true':'false');
+ });
+ const grid=gallery.querySelector('.tn22-gallery-grid');
+ grid.classList.toggle('salon',galleryCat==='Салон');
+ grid.innerHTML=items.length?items.map((x,i)=>`<button class="tn22-gallery-tile" type="button" data-gi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join(''):'<div class="tn23-gallery-empty">Фотографии пока не добавлены</div>';
 }
 let galleryCloseTimer=0;
 function setGalleryOrigin(origin){
@@ -152,9 +174,9 @@ function setGalleryOrigin(origin){
  gallery.style.setProperty('--gallery-origin-x',x+'%');
  gallery.style.setProperty('--gallery-origin-y',y+'%');
 }
-function openGallery(cat='Салон',origin=null){clearTimeout(galleryCloseTimer);galleryCat=Object.prototype.hasOwnProperty.call(GALLERY,cat)?cat:'Салон';setGalleryOrigin(origin);renderGallery();gallery.classList.remove('closing');gallery.scrollTop=0;requestAnimationFrame(()=>gallery.classList.add('open'))}
+function openGallery(cat=defaultGalleryCategory,origin=null){clearTimeout(galleryCloseTimer);galleryCat=Object.prototype.hasOwnProperty.call(GALLERY,cat)?cat:defaultGalleryCategory;setGalleryOrigin(origin);renderGallery();gallery.classList.remove('closing');gallery.scrollTop=0;requestAnimationFrame(()=>gallery.classList.add('open'))}
 function closeGallery(){if(!gallery.classList.contains('open'))return;clearTimeout(galleryCloseTimer);gallery.classList.remove('open');gallery.classList.add('closing');galleryCloseTimer=setTimeout(()=>gallery.classList.remove('closing'),520)}
-const heroWorksLink=hero.querySelector('.tn22-worklink');if(heroWorksLink)heroWorksLink.onclick=e=>{e.preventDefault();openGallery('Салон',e.currentTarget)};
+const heroWorksLink=hero.querySelector('.tn22-worklink');if(heroWorksLink)heroWorksLink.onclick=e=>{e.preventDefault();openGallery(defaultGalleryCategory,e.currentTarget)};
 
 const sectionItems=[['tn13Portfolio','Портфолио'],['tn13Services','Услуги'],['tn38About','О нас'],['tn13Team','Команда'],['tn13Reviews','Отзывы'],['tn13Visit','Визит']];const sectionIds=sectionItems.map(x=>x[0]);const sectionNav=document.createElement('nav');sectionNav.className='tn23-section-nav';sectionNav.setAttribute('aria-hidden','true');sectionNav.innerHTML=sectionItems.map((x,i)=>`<button type="button" data-section="${x[0]}" class="${i===0?'active':''}">${x[1]}</button>`).join('');sectionNav.classList.add('salon-template-fixed-nav');document.body.appendChild(sectionNav);
 let activeSection='tn13Portfolio',navRaf=0,navTargetLock=null,navUnlockTimer=0;
@@ -168,7 +190,7 @@ function updateSectionNav(){navRaf=0;const heroPassed=window.scrollY>=Math.max(0
 window.addEventListener('scroll',()=>{if(!navRaf)navRaf=requestAnimationFrame(updateSectionNav)},{passive:true});window.addEventListener('resize',updateSectionNav,{passive:true});requestAnimationFrame(updateSectionNav);
 
 // PORTFOLIO
-const port=$('#tn13Portfolio');port.innerHTML=`<div class="tn22-port"><p class="tn22-kicker">Портфолио</p><h2>Наши работы</h2><div class="tn22-port-grid">${PORTFOLIO.map((x,i)=>`<button class="tn22-photo" type="button" data-pi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join('')}</div><button class="tn22-port-all" type="button">Открыть галерею <span>→</span></button></div>`;port.querySelectorAll('[data-pi]').forEach(b=>b.onclick=()=>openViewer(PORTFOLIO,+b.dataset.pi,'portfolio'));port.querySelector('.tn22-port-all').onclick=e=>openGallery('Салон',e.currentTarget);
+const port=$('#tn13Portfolio');port.innerHTML=`<div class="tn22-port"><p class="tn22-kicker">Портфолио</p><h2>Наши работы</h2><div class="tn22-port-grid">${PORTFOLIO.map((x,i)=>`<button class="tn22-photo" type="button" data-pi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join('')}</div><button class="tn22-port-all" type="button">Открыть галерею <span>→</span></button></div>`;port.querySelectorAll('[data-pi]').forEach(b=>b.onclick=()=>openViewer(PORTFOLIO,+b.dataset.pi,'portfolio'));port.querySelector('.tn22-port-all').onclick=e=>openGallery(defaultGalleryCategory,e.currentTarget);
 
 // SERVICES
 const serv=$('#tn13Services');
