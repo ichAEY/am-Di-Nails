@@ -103,9 +103,9 @@ const data={
       {
         "src": "hero.webp",
         "alt": {
-          "ru": "Педикюр Di Nails",
-          "en": "Di Nails pedicure",
-          "hy": "Di Nails ոտնահարդարում"
+          "ru": "Атмосфера студии Di Nails",
+          "en": "Di Nails studio atmosphere",
+          "hy": "Di Nails ստուդիայի մթնոլորտ"
         }
       }
     ],
