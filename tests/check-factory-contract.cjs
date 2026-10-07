@@ -8,7 +8,9 @@ const vm=require('node:vm');
 const {loadSiteData,validateSiteData}=require('./validate-site-data.cjs');
 
 const root=path.resolve(__dirname,'..');
-const data=loadSiteData(path.join(root,'site-data.js'));
+const clientData=loadSiteData(path.join(root,'site-data.js'));
+assert.deepEqual(validateSiteData(clientData,{rootDir:root}),[],'the client site must satisfy its schema');
+const data=loadSiteData(path.join(root,'tests/fixtures/site-data.template.js'));
 assert.deepEqual(validateSiteData(data,{rootDir:root}),[],'the distributed template must satisfy its schema');
 
 const starter=loadSiteData(path.join(root,'site-data.blank.js'));
