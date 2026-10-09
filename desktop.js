@@ -130,7 +130,7 @@
       </div>
 
       <div class="std-hero-photo">
-        <video id="stdHeroMedia" src="DI_NAILS_Hero_6s_Smooth_60fps.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" poster="hero.webp" aria-label="Видео Di Nails"></video>
+        <img id="stdHeroMedia" src="hero.webp" alt="Медиа салона"><video class="di-nails-hero-video" src="DI_NAILS_Hero_6s_Smooth_60fps.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" poster="hero.webp" aria-label="Видео Di Nails"></video>
       </div>
     </section>
 
