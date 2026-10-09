@@ -67,7 +67,7 @@ jobs:
             cp "$file" _site/
           done
           shopt -s nullglob
-          for file in hero.webp profile.webp gallery-*.webp team-*.webp; do
+          for file in hero.webp profile.webp gallery-*.webp team-*.webp DI_NAILS_Hero_6s_Smooth_60fps.mp4; do
             cp "$file" _site/
           done
           for file in logo.webp logo.png logo.svg; do
