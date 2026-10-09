@@ -757,7 +757,7 @@ services.insertAdjacentElement('afterend',about);
 
   const BRAND_SRC=window.TANEM_SITE_DATA?.media?.logo||'';
   const ABOUT_SRC='media-placeholder.svg';
-  const VIDEO_SRC='';
+  const VIDEO_SRC='DI_NAILS_Hero_6s_Smooth_60fps.mp4';
 
   
 
@@ -779,9 +779,10 @@ services.insertAdjacentElement('afterend',about);
     media.dataset.brVideoReady='1';
     media.classList.add('br-video-media');
     media.setAttribute('aria-label','Видео SALON NAME');
-    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="media-placeholder.svg" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="media-placeholder.svg" alt="Фото салона">';
+    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="auto" poster="hero.webp" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="media-placeholder.svg" alt="Фото салона">';
     const video=media.querySelector('video');
     if(video){
+      video.addEventListener('error',()=>{media.innerHTML='<img class="br-hero-video" src="hero.webp" alt="Фото салона">'}, {once:true});
       video.muted=true;
       video.defaultMuted=true;
       const tryPlay=()=>{const p=video.play();if(p&&typeof p.catch==='function')p.catch(()=>{});};
@@ -1160,7 +1161,7 @@ services.insertAdjacentElement('afterend',about);
     sw.className='br-lang-switch';
     sw.setAttribute('role','group');
     sw.setAttribute('aria-label','Language');
-    var order=REGION.locales.includes('hy')?['hy','ru','en']:REGION.locales;
+    var order=REGION.locales.includes('hy')?['ru','hy','en']:REGION.locales;
     sw.innerHTML=order.map(function(lang,index){return (index?'<span class="sep">/</span>':'')+'<button type="button" data-lang="'+lang+'">'+REGION.labels[lang]+'</button>'}).join('');
     sw.addEventListener('pointerdown',function(e){e.stopPropagation();});
     sw.addEventListener('click',function(e){

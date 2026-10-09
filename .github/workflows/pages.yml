@@ -85,7 +85,7 @@ jobs:
           done
 
           shopt -s nullglob
-          for file in hero.webp profile.webp gallery-*.webp team-*.webp logo.webp logo.png logo.svg; do
+          for file in hero.webp profile.webp gallery-*.webp team-*.webp logo.webp logo.png logo.svg DI_NAILS_Hero_6s_Smooth_60fps*.mp4; do
             test -f "$file" || continue
             cp "$file" _site/
           done
