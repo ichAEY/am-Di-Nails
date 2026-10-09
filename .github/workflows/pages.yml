@@ -90,6 +90,9 @@ jobs:
             cp "$file" _site/
           done
 
+          # The client uploaded .mov, but browsers request .mp4. Build the MP4 in the artifact.
+          bash scripts/prepare-di-nails-hero.sh _site
+
           touch _site/.nojekyll
 
           test ! -e _site/intake
