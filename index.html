@@ -19,6 +19,8 @@
 html,body{margin:0;min-height:100%;background:#FAF9F6;color:#252525;font-family:Manrope,Arial,sans-serif}
 /* DI NAILS only: Armenian switch label matches RU/EN weight and optical height. */
 #salon-desktop-v1 .std-lang-switch button[data-desktop-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;font-size:13.7px!important;font-weight:500!important;line-height:1!important;letter-spacing:0!important}
+/* Active locale changes color only; do not change glyph thickness. */
+#salon-desktop-v1 .std-lang-switch-under-brand button.active{font-weight:500!important}
 #salon-mobile .br-lang-switch button[data-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;font-size:12.2px!important;font-weight:600!important;line-height:1!important;letter-spacing:0!important}
 /* Preserve RU, Հայ and EN weights while Armenian page-wide typography changes. */
 body[data-br-lang="hy"] #salon-mobile .br-lang-switch button{font-weight:600!important}
