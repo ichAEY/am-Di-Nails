@@ -68,7 +68,7 @@
         <span class="std-header-brand-main">SALON NAME</span>
 
       </a>
-      <div class="std-lang-switch std-lang-switch-under-brand" role="group" aria-label="Language">${REGION.locales.map((lang,index)=>(index?'<span class="sep">|</span>':'')+'<button type="button" data-desktop-lang="'+lang+'">'+REGION.labels[lang]+'</button>').join('')}</div>
+      <div class="std-lang-switch std-lang-switch-under-brand" role="group" aria-label="Language">${(REGION.locales.includes('hy')?['ru','hy','en']:REGION.locales).map((lang,index)=>(index?'<span class="sep">|</span>':'')+'<button type="button" data-desktop-lang="'+lang+'">'+REGION.labels[lang]+'</button>').join('')}</div>
       <nav class="std-nav" aria-label="Основная навигация">
         <a href="#salonDesktopServices">Услуги</a>
         <a href="#salonDesktopPortfolio">Наши работы</a>
@@ -130,7 +130,7 @@
       </div>
 
       <div class="std-hero-photo">
-        <img id="stdHeroMedia" src="media-placeholder.svg" alt="Медиа салона">
+        <video id="stdHeroMedia" src="DI_NAILS_Hero_6s_Smooth_60fps.mp4" muted autoplay loop playsinline webkit-playsinline preload="auto" poster="hero.webp" aria-label="Видео Di Nails"></video>
       </div>
     </section>
 
