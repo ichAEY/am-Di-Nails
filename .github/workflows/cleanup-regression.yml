@@ -49,6 +49,8 @@ jobs:
           fi
           node tests/validate-site-data.cjs tests/fixtures/site-data.production.js --production
           node tests/check-factory-contract.cjs
+      - name: Verify DI NAILS 60fps hero MOV-to-MP4 packaging
+        run: bash scripts/prepare-di-nails-hero.sh /tmp/di-nails-hero-check
 
   visual-regression:
     needs: compare-to-approved-template
