@@ -247,13 +247,8 @@
     if(heroImage&&hero){
       const src=typeof hero==='string'?hero:hero.src;
       const alt=typeof hero==='string'?text(salon.name,lang):text(hero.alt,lang);
-      if(heroImage.tagName==='IMG'){
-        if(src)heroImage.src=src;
-        heroImage.alt=alt||text(salon.name,lang);
-      }else if(heroImage.tagName==='VIDEO'){
-        heroImage.poster=src||'hero.webp';
-        heroImage.setAttribute('aria-label',alt||text(salon.name,lang));
-      }
+      if(src)heroImage.src=src;
+      heroImage.alt=alt||text(salon.name,lang);
     }
     const aboutImage=root.querySelector('.mct-about-portrait img');
     if(aboutImage&&data.media.about)aboutImage.src=data.media.about;
