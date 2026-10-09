@@ -11,12 +11,15 @@
 <link rel="apple-touch-icon" href="favicon-source.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&family=Noto+Sans+Armenian:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="logo-placeholder.svg" as="image" type="image/svg+xml" fetchpriority="high">
 <link rel="preload" href="media-placeholder.svg" as="image" type="image/svg+xml" fetchpriority="high">
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#FAF9F6;color:#252525;font-family:Manrope,Arial,sans-serif}
+/* DI NAILS: Armenian switch label only. All controls and other typography stay unchanged. */
+#salon-desktop-v1 .std-lang-switch button[data-desktop-lang="hy"],
+#salon-mobile .br-lang-switch button[data-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;letter-spacing:0!important}
 #brBootIntro{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#FAF9F6;opacity:1;transition:opacity .24s ease;pointer-events:auto}
 #brBootIntro img{display:block;width:min(50vw,220px);height:auto;max-height:38svh;object-fit:contain}
 html[data-br-device="desktop"] #brBootIntro{transition:opacity .40s cubic-bezier(.22,1,.36,1)}
@@ -48,7 +51,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
 <link rel="stylesheet" href="desktop.css?v=salon-20261003-v2" media="(hover:hover) and (pointer:fine), (min-width:1024px)">
 <link rel="stylesheet" href="salon-palette.css?v=salon-20261003-v2" media="(hover:hover) and (pointer:fine), (min-width:1024px)">
 <script src="site-data.js?v=di-nails-20261008-gallery"></script>
-<script src="site-regions.js?v=salon-final-20260928-v2"></script>
+<script src="site-regions.js?v=di-nails-20261010-hy-label"></script>
 <script>
 (()=>{
  const desktop=!!(window.matchMedia&&(matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(min-width:1024px)').matches));
