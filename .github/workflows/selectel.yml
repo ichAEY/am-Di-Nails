@@ -41,6 +41,9 @@ jobs:
           test -s hero.webp
           test -s profile.webp
 
+      - name: Install FFmpeg for DI NAILS hero video
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+
       - name: Build safe production package
         shell: bash
         run: |
@@ -73,6 +76,8 @@ jobs:
           for file in logo.webp logo.png logo.svg; do
             if [ -f "$file" ]; then cp "$file" _site/; fi
           done
+          # Match the existing video src on both mobile and desktop.
+          bash scripts/prepare-di-nails-hero.sh _site
 
       - name: Configure SSH and verify server identity
         env:

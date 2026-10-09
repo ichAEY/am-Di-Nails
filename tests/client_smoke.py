@@ -42,6 +42,25 @@ def check(browser, width, height, mobile, language):
     page.wait_for_timeout(250)
     brand = ".std-header-brand-main" if desktop else ".tn22-title"
     must_equal(page.locator(brand), data["salon"]["name"][language], "brand")
+    if data.get("country") == "AM":
+        # Selecting Armenian must never shrink or thin the other language buttons.
+        group = ".std-lang-switch-under-brand" if desktop else ".br-lang-switch"
+        attr = "data-desktop-lang" if desktop else "data-lang"
+        expected_weight = "500" if desktop else "600"
+        labels = page.locator(f"{root} {group} button[{attr}]")
+        assert labels.count() == 3, "Armenian switch must keep three language buttons"
+        assert [x.get_attribute(attr) for x in labels.all()] == ["ru", "hy", "en"], "Language switch order changed"
+        for choice in ("ru", "hy", "en"):
+            page.locator(f'{root} {group} button[{attr}="{choice}"]').click()
+            page.wait_for_function(
+                "(lang) => document.body.dataset.brLang === lang", arg=choice, timeout=3000)
+            weights = labels.evaluate_all(
+                "(buttons) => buttons.map(button => getComputedStyle(button).fontWeight)")
+            assert weights == [expected_weight] * 3, (
+                f"Language switch changed font weight in {choice}: {weights}")
+        page.locator(f'{root} {group} button[{attr}="{language}"]').click()
+        page.wait_for_function(
+            "(lang) => document.body.dataset.brLang === lang", arg=language, timeout=3000)
     if desktop:
         assert page.locator(".std-header-brand-main img").count() == 0, "Desktop header must always use one-line text branding"
     if desktop and data.get("media", {}).get("hero"):
