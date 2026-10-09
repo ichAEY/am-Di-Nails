@@ -17,9 +17,10 @@
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#FAF9F6;color:#252525;font-family:Manrope,Arial,sans-serif}
-/* DI NAILS: Armenian switch label only. All controls and other typography stay unchanged. */
-#salon-desktop-v1 .std-lang-switch button[data-desktop-lang="hy"],
-#salon-mobile .br-lang-switch button[data-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;letter-spacing:0!important}
+/* DI NAILS only: Armenian switch label matches RU/EN weight and optical height. */
+#salon-desktop-v1 .std-lang-switch button[data-desktop-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;font-size:13.7px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important}
+#salon-mobile .br-lang-switch button[data-lang="hy"]{font-family:"Noto Sans Armenian",Manrope,Arial,sans-serif!important;font-size:12.2px!important;font-weight:700!important;line-height:1!important;letter-spacing:0!important}
+@media(max-width:360px){#salon-mobile .br-lang-switch button[data-lang="hy"]{font-size:11.2px!important}}
 #brBootIntro{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#FAF9F6;opacity:1;transition:opacity .24s ease;pointer-events:auto}
 #brBootIntro img{display:block;width:min(50vw,220px);height:auto;max-height:38svh;object-fit:contain}
 html[data-br-device="desktop"] #brBootIntro{transition:opacity .40s cubic-bezier(.22,1,.36,1)}
@@ -124,10 +125,10 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
    }else ready();
  }
  const script=document.createElement('script');
- script.src=desktop?'desktop.js?v=di-nails-20261008-gallery':'mobile.js?v=di-nails-20261008-gallery';
+ script.src=desktop?'desktop.js?v=di-nails-20261010-video-lang':'mobile.js?v=di-nails-20261010-video-lang';
  script.async=false;script.onload=()=>{
    const runtime=document.createElement('script');
-   runtime.src='site-runtime.js?v=salon-20261003-v5';
+   runtime.src='site-runtime.js?v=di-nails-20261010-video-lang';
    runtime.async=false;runtime.onload=loaded;
    runtime.onerror=()=>{if(closed)error.classList.add('is-visible')};
    document.body.appendChild(runtime);
