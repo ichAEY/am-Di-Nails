@@ -73,6 +73,8 @@ jobs:
           for file in logo.webp logo.png logo.svg; do
             if [ -f "$file" ]; then cp "$file" _site/; fi
           done
+          # Match the existing video src on both mobile and desktop.
+          bash scripts/prepare-di-nails-hero.sh _site
 
       - name: Configure SSH and verify server identity
         env:
