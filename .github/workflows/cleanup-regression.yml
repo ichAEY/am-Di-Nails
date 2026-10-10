@@ -49,10 +49,8 @@ jobs:
           fi
           node tests/validate-site-data.cjs tests/fixtures/site-data.production.js --production
           node tests/check-factory-contract.cjs
-      - name: Install FFmpeg for DI NAILS hero packaging check
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
-      - name: Verify DI NAILS 60fps hero MOV-to-MP4 packaging
-        run: bash scripts/prepare-di-nails-hero.sh /tmp/di-nails-hero-check
+      - name: Verify DI NAILS hero MP4 exists
+        run: test -s DI_NAILS_Hero_Seamless_Reordered_Light_60fps.mp4
 
   visual-regression:
     needs: compare-to-approved-template

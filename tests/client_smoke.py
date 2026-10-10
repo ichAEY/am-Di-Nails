@@ -67,6 +67,24 @@ def check(browser, width, height, mobile, language):
         hero = data["media"]["hero"][0]
         expected_hero = hero if isinstance(hero, str) else hero.get("src")
         assert page.locator("#stdHeroMedia").first.get_attribute("src") == expected_hero, "Desktop hero did not use canonical hero"
+    # The DI NAILS hero must use the uploaded MP4, without the former 38% crop offset.
+    video_selector = (
+        "#salon-desktop-v1 .std-hero-photo video.di-nails-hero-video"
+        if desktop else
+        "#salon-mobile #tn13Top .tn22-media.br-video-media video.br-hero-video"
+    )
+    hero_video = page.locator(video_selector)
+    hero_video.wait_for(state="attached", timeout=10000)
+    assert hero_video.get_attribute("src") == "DI_NAILS_Hero_Seamless_Reordered_Light_60fps.mp4", (
+        "Hero video is not the current DI NAILS upload")
+    page.wait_for_function(
+        "(sel) => { const video = document.querySelector(sel);"
+        " return !!video && video.readyState >= 1 && video.videoWidth > 0 && video.videoHeight > 0; }",
+        arg=video_selector,
+        timeout=15000,
+    )
+    assert hero_video.evaluate("(video) => getComputedStyle(video).objectPosition") == "50% 50%", (
+        "Hero video must have the standard centered crop")
     assert data["salon"]["name"][language] in page.title(), "Incorrect page title"
     cards = page.locator("#stdServiceList .dct-service-card" if desktop
                          else "#tn13Services .tn31-service-row")
