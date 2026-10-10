@@ -757,7 +757,7 @@ services.insertAdjacentElement('afterend',about);
 
   const BRAND_SRC=window.TANEM_SITE_DATA?.media?.logo||'';
   const ABOUT_SRC='media-placeholder.svg';
-  const VIDEO_SRC='DI_NAILS_Hero_6s_Smooth_60fps.mp4';
+  const VIDEO_SRC='DI_NAILS_Hero_Seamless_Reordered_Light_60fps.mp4';
 
   
 
